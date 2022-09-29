@@ -34,6 +34,8 @@ public class App {
   private static void runFile(String path) throws IOException {
     byte[] bytes = Files.readAllBytes(Paths.get(path));
     run(new String(bytes, Charset.defaultCharset()));
+
+    if (hadError) System.exit(65);
   }
 
   private static void runPrompt() throws IOException {
@@ -48,6 +50,7 @@ public class App {
         break;
       }
       run(line);
+      hadError = false;
     }
   }
 
@@ -60,5 +63,16 @@ public class App {
     }
   }
 
+  static void error(int line, String message) {
+    report(line, "", message);
+  }
+
+  private static void report(int line, String where, String message) {
+    System.err.println(
+        "[line " + line + "] Error" + where + ": " + message);
+    hadError = true;
+  }
+
+  private static boolean hadError = false;
 
 }
