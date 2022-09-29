@@ -1,7 +1,6 @@
 package com.cdugga;
 
 import com.sun.tools.javac.parser.Tokens;
-import com.sun.tools.javac.parser.Tokens.Token;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Scanner;
+import com.cdugga.Scanner;
 
 
 /**
@@ -56,7 +55,7 @@ public class App {
 
   private static void run(String source) {
     Scanner scanner = new Scanner(source);
-    List<Tokens> tokens = scanner.scanTokens(); // to do create scanner and scan tokens, and token class
+    List<Token> tokens = scanner.scanTokens(); // to do create scanner and scan tokens, and token class
 
     for (Token token : tokens) {
       System.out.println(token);
