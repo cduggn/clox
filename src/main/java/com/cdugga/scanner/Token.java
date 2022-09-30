@@ -1,4 +1,4 @@
-package com.cdugga;
+package com.cdugga.scanner;
 
 enum TokenType {
   // Single-character tokens.

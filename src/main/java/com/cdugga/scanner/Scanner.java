@@ -1,12 +1,13 @@
-package com.cdugga;
+package com.cdugga.scanner;
 
-import java.util.AbstractMap;
-import java.util.AbstractMap.SimpleEntry;
+import com.cdugga.App;
+import com.cdugga.Logger;
+import com.cdugga.scanner.TokenType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.cdugga.TokenType.*;
+import static com.cdugga.scanner.TokenType.*;
 
 public class Scanner {
 
@@ -16,14 +17,18 @@ public class Scanner {
   private int current = 0;
   private int line = 1;
 
+  private Logger logger;
 
   private static final Map<String, TokenType> keywords;
 
-  Scanner(String source) {
+  public Scanner(String source, Logger logger) {
     this.source = source;
+    this.logger = logger;
+
   }
 
-  List<Token> scanTokens() {
+
+  public List<Token> scanTokens() {
 
     while (!isAtEnd()) {
       // we are at the beginning of the next lexeme
@@ -114,7 +119,7 @@ public class Scanner {
         } else if (isAlpha(c)) {
           identifier();
         } else {
-          App.error(line, "Unexpected character.");
+          logger.error(line, "Unexpected character.");
         }
         break;
     }
@@ -163,7 +168,7 @@ public class Scanner {
 
     // unterminated string
     if (isAtEnd()) {
-      App.error(line, "Unterminated string.");
+      logger.error(line, "Unterminated string.");
       return;
     }
 
