@@ -83,23 +83,28 @@ public class Scanner {
       case '>':
         addToken(match('=') ? GREATER_EQUAL : GREATER);
         break;
-      case ' ':
-        ;
-      case '\r':
-      case '\t':
-        break;
-      case '\n':
-        line++;
-        break;
       case '/':
         if (match('/')) {
           // a comment goes until the end of the line
           while (peek() != '\n' && !isAtEnd()) {
             advance();
           }
+        }
+        if (match('*')) {
+          // a comment goes until the end of the line
+          while (peek() != '*' && !isAtEnd()) {
+            advance();
+          }
         } else {
           addToken(SLASH);
         }
+      case ' ':
+      case '\r':
+      case '\t':
+        break;
+      case '\n':
+        line++;
+        break;
       case '"':
         string();
         break;
