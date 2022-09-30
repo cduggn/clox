@@ -1,4 +1,4 @@
-package com.cdugga;
+package com.cdugga.logger;
 
 public class Logger {
 

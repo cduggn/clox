@@ -1,8 +1,6 @@
 package com.cdugga.scanner;
 
-import com.cdugga.App;
-import com.cdugga.Logger;
-import com.cdugga.scanner.TokenType;
+import com.cdugga.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

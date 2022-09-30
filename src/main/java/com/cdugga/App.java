@@ -1,6 +1,7 @@
 package com.cdugga;
 
 import com.cdugga.scanner.Token;
+import com.cdugga.logger.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -63,17 +64,4 @@ public class App {
       System.out.println(token);
     }
   }
-
-//  static void error(int line, String message) {
-//    report(line, "", message);
-//  }
-//
-//  private static void report(int line, String where, String message) {
-//    System.err.println(
-//        "[line " + line + "] Error" + where + ": " + message);
-//    hadError = true;
-//  }
-
-//  private static boolean hadError = false;
-
 }
