@@ -1,5 +1,8 @@
 package com.cdugga.logger;
 
+import com.cdugga.scanner.Token;
+import com.cdugga.scanner.TokenType;
+
 public class Logger {
 
 
@@ -12,6 +15,14 @@ public class Logger {
         "[line " + line + "] Error" + where + ": " + message);
     hadError = true;
   }
+  public static void error(Token token, String message) {
+    if (token.type == TokenType.EOF) {
+      report(token.line, " at end", message);
+    } else {
+      report(token.line, " at '" + token.lexeme + "'", message);
+    }
+  }
+
   private static boolean hadError = false;
 
   public static boolean isHadError() {

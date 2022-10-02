@@ -1,15 +1,21 @@
 package com.cdugga.parser;
 
+import com.cdugga.logger.Logger;
 import com.cdugga.scanner.Token;
 import java.util.List;
 
 public class Parser {
 
+  private static class ParseError extends RuntimeException { }
+
   private final List<Token> tokens;
   private int current = 0;
 
-  public Parser(List<Token> tokens) {
+  private Logger logger;
+
+  public Parser(List<Token> tokens, Logger logger) {
     this.tokens = tokens;
+    this.logger = logger;
   }
 
   private Expr expression() {
@@ -106,9 +112,9 @@ public class Parser {
   }
 
   private Expr primary() {
-    if (match("false") return new Expr.Literal(false);
-    if (match("true") return new Expr.Literal(true);
-    if (match("nil") return new Expr.Literal(null);
+    if (match("false")) return new Expr.Literal(false);
+    if (match("true")) return new Expr.Literal(true);
+    if (match("nil")) return new Expr.Literal(null);
 
     if (match("NUMBER","STRING")) {
       return new Expr.Literal(previous().literal);
@@ -120,7 +126,20 @@ public class Parser {
       consume(")", "Expect ')' after expression.");
       return new Expr.Grouping(expr);
     }
+    
+    throw error(peek(), "Expect expression.");
 
+  }
+
+  private Token consume(String type, String message) {
+    if (check(type)) return advance();
+
+    throw error(peek(), message);
+  }
+
+  private ParseError error(Token token, String message) {
+    logger.error(token, message);
+    return new ParseError();
   }
 
 }
