@@ -1,5 +1,8 @@
 package com.cdugga;
 
+import com.cdugga.parser.ASTPrinter;
+import com.cdugga.parser.Expr;
+import com.cdugga.parser.Parser;
 import com.cdugga.scanner.Token;
 import com.cdugga.logger.Logger;
 import java.io.BufferedReader;
@@ -57,11 +60,23 @@ public class App {
   }
 
   private static void run(String source) {
+    System.out.println("##############################Start Scanning Tokens##############################");
     Scanner scanner = new Scanner(source, logger);
     List<Token> tokens = scanner.scanTokens(); // to do create scanner and scan tokens, and token class
 
     for (Token token : tokens) {
       System.out.println(token);
     }
+
+    System.out.println("############################End Scanning Tokens############################");
+    System.out.println("  -------  ");
+    System.out.println("##############################Start Parsing Tokens##############################");
+    Parser parser = new Parser(tokens, logger);
+    Expr expression = parser.parse();
+
+    if(logger.isHadError()) return;
+    System.out.println(new ASTPrinter().print(expression));
+    System.out.println("############################End Parsing Tokens############################");
+
   }
 }

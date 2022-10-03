@@ -21,7 +21,7 @@ public class Parser {
     this.logger = logger;
   }
 
-  Expr parse() {
+  public Expr parse() {
     try {
       return expression();
     } catch (ParseError error) {
@@ -59,7 +59,7 @@ public class Parser {
     if (isAtEnd()) {
       return false;
     }
-    return peek().equals(type);
+    return peek().type.name()== type;
   }
 
   private Token advance() {
@@ -96,7 +96,7 @@ public class Parser {
   private Expr term() {
     Expr expr = factor();
 
-    while (match("-", "+")) {
+    while (match(TokenType.MINUS.name(), TokenType.PLUS.name())) {
       Token operator = previous();
       Expr right = factor();
       expr = new Expr.Binary(expr, operator, right);
@@ -141,6 +141,10 @@ public class Parser {
     if (match("NUMBER", "STRING")) {
       return new Expr.Literal(previous().literal);
     }
+
+//    if (match("IDENTIFIER")) {
+//      return new Expr.Variable(previous());
+//    }
 
     if (match("(")) {
       Expr expr = expression();

@@ -45,7 +45,7 @@ public class ASTPrinter implements Expr.Visitor<String> {
     return parenthesis(expr.operator.lexeme, expr.right);
   }
 
-  String print(Expr expr) {
+  public String print(Expr expr) {
     return expr.accept(this);
   }
 
@@ -59,5 +59,7 @@ public class ASTPrinter implements Expr.Visitor<String> {
     sb.append(")");
     return sb.toString();
   }
+
+
 
 }
