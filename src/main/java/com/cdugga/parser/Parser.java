@@ -36,7 +36,7 @@ public class Parser {
   private Expr equality() {
     Expr expr = comparison();
 
-    while (match("!=", "==")) {
+    while (match(TokenType.BANG_EQUAL.name(), TokenType.EQUAL_EQUAL.name())) {
       Token operator = previous();
       Expr right = comparison();
       expr = new Expr.Binary(expr, operator, right);
@@ -59,7 +59,7 @@ public class Parser {
     if (isAtEnd()) {
       return false;
     }
-    return peek().type.name()== type;
+    return peek().type.name() == type;
   }
 
   private Token advance() {
@@ -84,7 +84,8 @@ public class Parser {
   private Expr comparison() {
     Expr expr = term();
 
-    while (match(">", "<", ">=", "<=")) {
+    while (match(TokenType.GREATER.name(), TokenType.LESS.name(), TokenType.GREATER_EQUAL.name(),
+        TokenType.LESS_EQUAL.name())) {
       Token operator = previous();
       Expr right = term();
       expr = new Expr.Binary(expr, operator, right);
@@ -108,7 +109,7 @@ public class Parser {
   private Expr factor() {
     Expr expr = unary();
 
-    while (match("*", "/")) {
+    while (match(TokenType.STAR.name(), TokenType.SLASH.name())) {
       Token operator = previous();
       Expr right = unary();
       expr = new Expr.Binary(expr, operator, right);
@@ -118,7 +119,7 @@ public class Parser {
   }
 
   private Expr unary() {
-    if (match("-", "!")) {
+    if (match(TokenType.MINUS.name(), TokenType.BANG.name())) {
       Token operator = previous();
       Expr right = unary();
       return new Expr.Unary(operator, right);
@@ -128,17 +129,17 @@ public class Parser {
   }
 
   private Expr primary() {
-    if (match("false")) {
+    if (match(TokenType.FALSE.name())) {
       return new Expr.Literal(false);
     }
-    if (match("true")) {
+    if (match(TokenType.TRUE.name())) {
       return new Expr.Literal(true);
     }
-    if (match("nil")) {
+    if (match(TokenType.NIL.name())) {
       return new Expr.Literal(null);
     }
 
-    if (match("NUMBER", "STRING")) {
+    if (match(TokenType.NUMBER.name(), TokenType.STRING.name())) {
       return new Expr.Literal(previous().literal);
     }
 
@@ -146,9 +147,9 @@ public class Parser {
 //      return new Expr.Variable(previous());
 //    }
 
-    if (match("(")) {
+    if (match(TokenType.LEFT_PAREN.name())) {
       Expr expr = expression();
-      consume(")", "Expect ')' after expression.");
+      consume(TokenType.RIGHT_PAREN.name(), "Expect ')' after expression.");
       return new Expr.Grouping(expr);
     }
 
