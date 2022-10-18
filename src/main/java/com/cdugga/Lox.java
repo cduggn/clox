@@ -1,5 +1,6 @@
 package com.cdugga;
 
+import com.cdugga.interpreter.Interpreter;
 import com.cdugga.parser.ASTPrinter;
 import com.cdugga.parser.Expr;
 import com.cdugga.parser.Parser;
@@ -18,7 +19,9 @@ import com.cdugga.scanner.Scanner;
 /**
  * Hello world!
  */
-public class App {
+public class Lox {
+
+  private static final Interpreter interpreter = new Interpreter();
 
   private static Logger logger = new Logger();
 
@@ -41,6 +44,8 @@ public class App {
     run(new String(bytes, Charset.defaultCharset()));
 
     if (logger.isHadError()) System.exit(65);
+
+    if (logger.isHadRuntimeError()) System.exit(70);
   }
 
   private static void runPrompt() throws IOException {
@@ -78,5 +83,13 @@ public class App {
     System.out.println(new ASTPrinter().print(expression));
     System.out.println("############################End Parsing Tokens############################");
 
+    interpreter.interpret(expression);
+
   }
+
+  static void runtimeError(RuntimeException error) {
+    System.err.println(error.getMessage());
+    logger.setHadRuntimeError(true);
+  }
+
 }

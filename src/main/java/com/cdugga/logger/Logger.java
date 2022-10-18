@@ -25,11 +25,21 @@ public class Logger {
 
   private static boolean hadError = false;
 
+  private static boolean hadRuntimeError = false;
+
   public static boolean isHadError() {
     return hadError;
   }
 
   public static void setHadError(boolean hadError) {
     Logger.hadError = hadError;
+  }
+
+  public static boolean isHadRuntimeError() {
+    return hadRuntimeError;
+  }
+
+  public static void setHadRuntimeError(boolean hadRuntimeError) {
+    Logger.hadRuntimeError = hadRuntimeError;
   }
 }
