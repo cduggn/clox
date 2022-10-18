@@ -1,10 +1,12 @@
 package com.cdugga.interpreter;
 
+import com.cdugga.error.RuntimeError;
 import com.cdugga.parser.Expr;
 import com.cdugga.parser.Expr.Binary;
 import com.cdugga.parser.Expr.Grouping;
 import com.cdugga.parser.Expr.Literal;
 import com.cdugga.parser.Expr.Unary;
+import com.cdugga.scanner.Token;
 
 public class Interpreter implements Expr.Visitor<Object>{
 
@@ -22,6 +24,7 @@ public class Interpreter implements Expr.Visitor<Object>{
           return (String) left + (String) right;
         }
       case MINUS:
+        checkNumberOperand(expr.operator, right);
         return (double) left - (double) right;
       case SLASH:
         return (double) left / (double) right;
@@ -89,5 +92,12 @@ public class Interpreter implements Expr.Visitor<Object>{
       return false;
     }
     return a.equals(b);
+  }
+
+  private void checkNumberOperand(Token operator, Object operand) {
+    if (operand instanceof Double) {
+      return;
+    }
+    throw new RuntimeError(operator, "Operand must be a number.");
   }
 }
