@@ -1,6 +1,6 @@
 package com.cdugga.parser;
 
-import com.cdugga.logger.Logger;
+import com.cdugga.Lox;
 import com.cdugga.scanner.Token;
 import com.cdugga.scanner.TokenType;
 import java.util.List;
@@ -14,11 +14,8 @@ public class Parser {
   private final List<Token> tokens;
   private int current = 0;
 
-  private Logger logger;
-
-  public Parser(List<Token> tokens, Logger logger) {
+  public Parser(List<Token> tokens) {
     this.tokens = tokens;
-    this.logger = logger;
   }
 
   public Expr parse() {
@@ -166,7 +163,7 @@ public class Parser {
   }
 
   private ParseError error(Token token, String message) {
-    logger.error(token, message);
+    Lox.error(token, message);
     return new ParseError();
   }
 

@@ -1,6 +1,7 @@
 package com.cdugga.scanner;
 
-import com.cdugga.logger.Logger;
+
+import com.cdugga.Lox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +16,11 @@ public class Scanner {
   private int current = 0;
   private int line = 1;
 
-  private Logger logger;
 
   private static final Map<String, TokenType> keywords;
 
-  public Scanner(String source, Logger logger) {
+  public Scanner(String source) {
     this.source = source;
-    this.logger = logger;
 
   }
 
@@ -117,7 +116,7 @@ public class Scanner {
         } else if (isAlpha(c)) {
           identifier();
         } else {
-          logger.error(line, "Unexpected character.");
+          Lox.error(line, "Unexpected character.");
         }
         break;
     }
@@ -166,7 +165,7 @@ public class Scanner {
 
     // unterminated string
     if (isAtEnd()) {
-      logger.error(line, "Unterminated string.");
+      Lox.error(line, "Unterminated string.");
       return;
     }
 

@@ -5,7 +5,7 @@ import com.cdugga.parser.ASTPrinter;
 import com.cdugga.parser.Expr;
 import com.cdugga.parser.Parser;
 import com.cdugga.scanner.Token;
-import com.cdugga.logger.Logger;
+import com.cdugga.scanner.TokenType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,7 +23,9 @@ public class Lox {
 
   private static final Interpreter interpreter = new Interpreter();
 
-  private static Logger logger = new Logger();
+  private static boolean hadError = false;
+
+  private static boolean hadRuntimeError = false;
 
   public static void main(String[] args) throws IOException {
 
@@ -43,9 +45,13 @@ public class Lox {
     byte[] bytes = Files.readAllBytes(Paths.get(path));
     run(new String(bytes, Charset.defaultCharset()));
 
-    if (logger.isHadError()) System.exit(65);
+    if (hadError){
+      System.exit(65);
+    }
 
-    if (logger.isHadRuntimeError()) System.exit(70);
+    if (hadRuntimeError) {
+      System.exit(70);
+    }
   }
 
   private static void runPrompt() throws IOException {
@@ -60,28 +66,28 @@ public class Lox {
         break;
       }
       run(line);
-      logger.setHadError(false);
+      hadError = false;
     }
   }
 
   private static void run(String source) {
-    System.out.println("##############################Start Scanning Tokens##############################");
-    Scanner scanner = new Scanner(source, logger);
+    System.out.println("<><><><>\tStart Scanning Tokens");
+    Scanner scanner = new Scanner(source);
     List<Token> tokens = scanner.scanTokens(); // to do create scanner and scan tokens, and token class
 
     for (Token token : tokens) {
       System.out.println(token);
     }
 
-    System.out.println("############################End Scanning Tokens############################");
+    System.out.println("<><><><>\tEnd Scanning Tokens");
     System.out.println("  -------  ");
-    System.out.println("##############################Start Parsing Tokens##############################");
-    Parser parser = new Parser(tokens, logger);
+    System.out.println("<><><><>\tStart Parsing Tokens");
+    Parser parser = new Parser(tokens);
     Expr expression = parser.parse();
 
-    if(logger.isHadError()) return;
+    if(hadError) return;
     System.out.println(new ASTPrinter().print(expression));
-    System.out.println("############################End Parsing Tokens############################");
+    System.out.println("<><><><>\tEnd Parsing Tokens");
 
     interpreter.interpret(expression);
 
@@ -89,7 +95,24 @@ public class Lox {
 
   static void runtimeError(RuntimeException error) {
     System.err.println(error.getMessage());
-    logger.setHadRuntimeError(true);
+    hadRuntimeError = true;
+  }
+
+  public static void error(int line, String message) {
+    report(line, "", message);
+  }
+
+  public static void report(int line, String where, String message) {
+    System.err.println(
+        "[line " + line + "] Error" + where + ": " + message);
+    hadError = true;
+  }
+  public static void error(Token token, String message) {
+    if (token.type == TokenType.EOF) {
+      report(token.line, " at end", message);
+    } else {
+      report(token.line, " at '" + token.lexeme + "'", message);
+    }
   }
 
 }
