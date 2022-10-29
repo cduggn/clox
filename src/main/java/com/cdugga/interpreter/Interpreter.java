@@ -8,7 +8,7 @@ import com.cdugga.parser.Expr.Literal;
 import com.cdugga.parser.Expr.Unary;
 import com.cdugga.scanner.Token;
 
-public class Interpreter implements Expr.Visitor<Object>{
+public class Interpreter implements Expr.Visitor<Object> {
 
   public void interpret(Expr expr) {
     try {
@@ -18,6 +18,7 @@ public class Interpreter implements Expr.Visitor<Object>{
       System.err.println(error.getMessage());
     }
   }
+
   private String stringify(Object object) {
     if (object == null) {
       return "nil";
@@ -90,10 +91,12 @@ public class Interpreter implements Expr.Visitor<Object>{
   public Object visitUnaryExpr(Unary expr) {
     Object right = evaluate(expr.right);
     switch (expr.operator.type) {
-      case MINUS:
-        return -(double)right;
+
       case BANG:
         return !isTruthy(right);
+      case MINUS:
+        checkNumberOperand(expr.operator, right);
+        return -(double) right;
     }
     return null;
   }
@@ -103,13 +106,13 @@ public class Interpreter implements Expr.Visitor<Object>{
       return false;
     }
     if (object instanceof Boolean) {
-      return (boolean)object;
+      return (boolean) object;
     }
     return true;
   }
 
 
-  private Object evaluate(Expr expr){
+  private Object evaluate(Expr expr) {
     return expr.accept(this);
   }
 
