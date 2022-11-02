@@ -7,13 +7,19 @@ import com.cdugga.parser.Expr.Grouping;
 import com.cdugga.parser.Expr.Literal;
 import com.cdugga.parser.Expr.Unary;
 import com.cdugga.scanner.Token;
+import com.cdugga.statement.Stmt;
 
-public class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
 
-  public void interpret(Expr expr) {
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+
+  public void interpret(List<Stmt> expr) {
     try {
-      Object value = evaluate(expr);
-      System.out.println(stringify(value));
+
+      for (Stmt statement : expr) {
+        execute(statement);
+      }
+
     } catch (RuntimeError error) {
       System.err.println(error.getMessage());
     }
@@ -101,6 +107,11 @@ public class Interpreter implements Expr.Visitor<Object> {
     return null;
   }
 
+  @Override
+  public Object visitVariableExpr(Expr.Variable expr) {
+    return null;
+  }
+
   private boolean isTruthy(Object object) {
     if (object == null) {
       return false;
@@ -115,6 +126,10 @@ public class Interpreter implements Expr.Visitor<Object> {
   private Object evaluate(Expr expr) {
     return expr.accept(this);
   }
+  private void execute(Stmt stmt) {
+    stmt.accept(this);
+  }
+
 
   private boolean isEqual(Object a, Object b) {
     if (a == null && b == null) {
@@ -140,4 +155,51 @@ public class Interpreter implements Expr.Visitor<Object> {
     throw new RuntimeError(operator, "Operands must be numbers.");
   }
 
+  @Override
+  public Void visitBlockStmt(Stmt.Block stmt) {
+    return null;
+  }
+
+  @Override
+  public Void visitClassStmt(Stmt.Class stmt) {
+    return null;
+  }
+
+  @Override
+  public Void visitExpressionStmt(Stmt.Expression stmt) {
+    evaluate(stmt.expression);
+    return null;
+  }
+
+  @Override
+  public Void visitFunctionStmt(Stmt.Function stmt) {
+    return null;
+  }
+
+  @Override
+  public Void visitIfStmt(Stmt.If stmt) {
+    return null;
+  }
+
+  @Override
+  public Void visitPrintStmt(Stmt.Print stmt) {
+    Object value = evaluate(stmt.expression);
+    System.out.println(stringify(value));
+    return null;
+  }
+
+  @Override
+  public Void visitReturnStmt(Stmt.Return stmt) {
+    return null;
+  }
+
+  @Override
+  public Void visitVarStmt(Stmt.Var stmt) {
+    return null;
+  }
+
+  @Override
+  public Void visitWhileStmt(Stmt.While stmt) {
+    return null;
+  }
 }

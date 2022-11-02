@@ -90,7 +90,7 @@ public class Lox {
 //    System.out.println(new ASTPrinter().print(expression));
 //    System.out.println("<><><><>\tEnd Parsing Tokens");
 //
-//    interpreter.interpret(expression);
+    interpreter.interpret(expression);
 
   }
 
