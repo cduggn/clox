@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import com.cdugga.scanner.Scanner;
+import com.cdugga.statement.Stmt;
 
 
 /**
@@ -83,13 +84,13 @@ public class Lox {
     System.out.println("  -------  ");
     System.out.println("<><><><>\tStart Parsing Tokens");
     Parser parser = new Parser(tokens);
-    Expr expression = parser.parse();
+    List<Stmt> expression = parser.parse();
 
     if(hadError) return;
-    System.out.println(new ASTPrinter().print(expression));
-    System.out.println("<><><><>\tEnd Parsing Tokens");
-
-    interpreter.interpret(expression);
+//    System.out.println(new ASTPrinter().print(expression));
+//    System.out.println("<><><><>\tEnd Parsing Tokens");
+//
+//    interpreter.interpret(expression);
 
   }
 

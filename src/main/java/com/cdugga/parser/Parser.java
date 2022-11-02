@@ -3,6 +3,9 @@ package com.cdugga.parser;
 import com.cdugga.Lox;
 import com.cdugga.scanner.Token;
 import com.cdugga.scanner.TokenType;
+import com.cdugga.statement.Stmt;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -18,12 +21,30 @@ public class Parser {
     this.tokens = tokens;
   }
 
-  public Expr parse() {
-    try {
-      return expression();
-    } catch (ParseError error) {
-      return null;
+  public List<Stmt> parse() {
+    List<Stmt> statements = new ArrayList<>();
+    while (!isAtEnd()) {
+      statements.add(statement());
     }
+    return statements;
+  }
+
+  private Stmt statement() {
+    if (match(TokenType.PRINT.name())) return printStatement();
+//    if (match(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
+    return expressionStatement();
+  }
+
+  private Stmt printStatement() {
+    Expr value = expression();
+    consume(TokenType.SEMICOLON.name(), "Expect ';' after value.");
+    return new Stmt.Print(value);
+  }
+
+  private Stmt expressionStatement() {
+    Expr expr = expression();
+    consume(TokenType.SEMICOLON.name(), "Expect ';' after expression.");
+    return new Stmt.Expression(expr);
   }
 
   private Expr expression() {
